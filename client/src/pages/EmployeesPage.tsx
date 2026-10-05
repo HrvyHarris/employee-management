@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { listEmployees, type Employee } from "../api";
 
 const STATUS_LABEL = { active: "Active", on_leave: "On leave", terminated: "Terminated" } as const;
@@ -16,6 +17,7 @@ export function EmployeesPage() {
       <header className="page-header">
         <h2>Employees</h2>
         {employees && <span className="muted">{employees.length} people</span>}
+        <Link to="/employees/new" className="button header-action">Add employee</Link>
       </header>
       {error && <p className="error">{error}</p>}
       {!employees && !error && <p className="muted">Loading...</p>}
@@ -30,6 +32,7 @@ export function EmployeesPage() {
                 <th>Department</th>
                 <th>Manager</th>
                 <th>Status</th>
+                <th><span className="visually-hidden">Actions</span></th>
               </tr>
             </thead>
             <tbody>
@@ -41,6 +44,9 @@ export function EmployeesPage() {
                   <td>{e.department}</td>
                   <td>{e.manager_name ?? "None"}</td>
                   <td><span className={`badge ${e.status}`}>{STATUS_LABEL[e.status]}</span></td>
+                  <td className="actions">
+                    <Link to={`/employees/${e.id}/edit`}>Edit</Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

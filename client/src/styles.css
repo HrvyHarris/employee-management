@@ -20,3 +20,23 @@ tr:last-child td { border-bottom: none; }
 .badge.active { background: #dcfce7; color: #166534; }
 .badge.on_leave { background: #fef3c7; color: #92400e; }
 .badge.terminated { background: #f3f4f6; color: #4b5563; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.button { display: inline-block; padding: 8px 14px; border-radius: 6px; border: 1px solid #4338ca; background: #4f46e5; color: #fff; font: inherit; font-size: 14px; font-weight: 500; text-decoration: none; cursor: pointer; }
+.button:hover { background: #4338ca; }
+.button:disabled { opacity: 0.6; cursor: default; }
+.button.secondary { background: #fff; color: #374151; border-color: #d1d5db; }
+.button.secondary:hover { background: #f9fafb; }
+.header-action { margin-left: auto; }
+td.actions { text-align: right; }
+td.actions > * + * { margin-left: 12px; }
+td.actions a { color: #4f46e5; text-decoration: none; font-weight: 500; }
+td.actions a:hover { text-decoration: underline; }
+.form { padding: 24px; max-width: 760px; overflow: visible; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; }
+.field { display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.field-label { font-weight: 500; color: #374151; }
+.field input, .field select { padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 6px; font: inherit; background: #fff; }
+.field input:focus, .field select:focus { outline: 2px solid #c7d2fe; border-color: #6366f1; }
+.field [aria-invalid="true"] { border-color: #dc2626; }
+.field-error { color: #b91c1c; font-size: 13px; }
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
