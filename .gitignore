@@ -5,3 +5,8 @@ node_modules/
 .DS_Store
 .next/
 dist/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
