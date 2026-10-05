@@ -27,7 +27,6 @@ tr:last-child td { border-bottom: none; }
 .button.secondary { background: #fff; color: #374151; border-color: #d1d5db; }
 .button.secondary:hover { background: #f9fafb; }
 .header-action { margin-left: auto; }
-td.actions { text-align: right; }
 td.actions > * + * { margin-left: 12px; }
 td.actions a { color: #4f46e5; text-decoration: none; font-weight: 500; }
 td.actions a:hover { text-decoration: underline; }
@@ -40,3 +39,10 @@ td.actions a:hover { text-decoration: underline; }
 .field [aria-invalid="true"] { border-color: #dc2626; }
 .field-error { color: #b91c1c; font-size: 13px; }
 .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; }
+.banner { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; border-radius: 8px; padding: 10px 14px; font-size: 14px; margin: 0 0 16px; }
+.actions { text-align: right; }
+.actions .btn + .btn { margin-left: 8px; }
+.btn { font: inherit; font-size: 13px; padding: 5px 10px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; color: #1f2937; cursor: pointer; }
+.btn:hover { background: #f3f4f6; }
+.btn.danger { color: #b91c1c; border-color: #fecaca; }
+.btn.danger:hover { background: #fef2f2; }
