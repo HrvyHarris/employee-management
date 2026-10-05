@@ -13,7 +13,8 @@ body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 .error { color: #b91c1c; }
 .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
-th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0f1f3; white-space: nowrap; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0f1f3; }
+td.actions, .badge { white-space: nowrap; }
 th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #6b7280; background: #fafafa; }
 tr:last-child td { border-bottom: none; }
 .badge { padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 500; }
