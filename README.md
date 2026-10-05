@@ -1,10 +1,21 @@
 # Employee Management
 
-A small HR admin app: employee directory, profiles, time off, Trash and a dashboard. React + Vite on the client, Express on the server, SQLite for storage. All demo data is fake.
+A small HR admin app: an employee directory where you can add, edit and remove employees, with a Trash page to restore or permanently delete them. React + Vite on the client, Express on the server, SQLite for storage. All demo data is fake.
+
+Not built yet: search and filters, dashboard metrics, employee profiles and time off.
 
 ## Requirements
 
-Node 22 or newer.
+Node 22 or newer (developed on Node 26) and npm. Nothing else to install: the database is a local SQLite file created on first run.
+
+## Quick start
+
+```sh
+npm install
+npm run dev
+```
+
+Then open http://localhost:5173.
 
 ## Install
 
