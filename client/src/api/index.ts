@@ -5,3 +5,7 @@ export * from "./employeeInput";
 export * from "./getEmployee";
 export * from "./createEmployee";
 export * from "./updateEmployee";
+export * from "./removeEmployee";
+export * from "./listTrash";
+export * from "./restoreEmployee";
+export * from "./deleteForever";

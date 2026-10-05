@@ -1,10 +1,12 @@
 import { NavLink, Navigate, Route, Routes } from "react-router-dom";
 import { EmployeesPage } from "./pages/EmployeesPage";
 import { EmployeeFormPage } from "./pages/EmployeeFormPage";
+import { TrashPage } from "./pages/TrashPage";
 
 // Sidebar entries: add one line per screen.
 const NAV = [
   { to: "/employees", label: "Employees" },
+  { to: "/trash", label: "Trash" },
 ];
 
 export function App() {
@@ -26,6 +28,7 @@ export function App() {
           <Route path="/employees" element={<EmployeesPage />} />
           <Route path="/employees/new" element={<EmployeeFormPage key="new" />} />
           <Route path="/employees/:id/edit" element={<EmployeeFormPage key="edit" />} />
+          <Route path="/trash" element={<TrashPage />} />
           <Route path="*" element={<Navigate to="/employees" replace />} />
         </Routes>
       </main>

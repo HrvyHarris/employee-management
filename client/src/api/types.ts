@@ -8,6 +8,7 @@ export type Employee = {
   department: string;
   manager_id: number | null;
   manager_name: string | null;
+  manager_in_trash: number;
   status: "active" | "on_leave" | "terminated";
   hire_date: string;
   termination_date: string | null;
