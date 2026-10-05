@@ -7,7 +7,8 @@ export function employeesRouter(db: Db) {
   router.get("/", (_req, res) => {
     const rows = db
       .prepare(
-        `SELECT e.*, m.first_name || ' ' || m.last_name AS manager_name
+        `SELECT e.*, m.first_name || ' ' || m.last_name AS manager_name,
+                m.deleted_at IS NOT NULL AS manager_in_trash
          FROM employees e
          LEFT JOIN employees m ON m.id = e.manager_id
          WHERE e.deleted_at IS NULL

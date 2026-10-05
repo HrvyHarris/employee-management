@@ -20,3 +20,10 @@ tr:last-child td { border-bottom: none; }
 .badge.active { background: #dcfce7; color: #166534; }
 .badge.on_leave { background: #fef3c7; color: #92400e; }
 .badge.terminated { background: #f3f4f6; color: #4b5563; }
+.banner { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; border-radius: 8px; padding: 10px 14px; font-size: 14px; margin: 0 0 16px; }
+.actions { text-align: right; }
+.actions .btn + .btn { margin-left: 8px; }
+.btn { font: inherit; font-size: 13px; padding: 5px 10px; border-radius: 6px; border: 1px solid #d1d5db; background: #fff; color: #1f2937; cursor: pointer; }
+.btn:hover { background: #f3f4f6; }
+.btn.danger { color: #b91c1c; border-color: #fecaca; }
+.btn.danger:hover { background: #fef2f2; }
