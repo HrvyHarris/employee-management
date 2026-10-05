@@ -1,0 +1,22 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #1f2937; background: #f6f7f9; }
+.layout { display: flex; min-height: 100vh; }
+.sidebar { width: 220px; background: #fff; border-right: 1px solid #e5e7eb; padding: 20px 12px; }
+.brand { font-size: 18px; margin: 0 8px 20px; }
+.nav-link { display: block; padding: 8px 12px; border-radius: 6px; color: #4b5563; text-decoration: none; margin-bottom: 2px; }
+.nav-link:hover { background: #f3f4f6; }
+.nav-link.active { background: #eef2ff; color: #3730a3; font-weight: 600; }
+.content { flex: 1; padding: 28px 32px; min-width: 0; }
+.page-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 16px; }
+.page-header h2 { margin: 0; font-size: 22px; }
+.muted { color: #6b7280; font-size: 14px; }
+.error { color: #b91c1c; }
+.card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #f0f1f3; white-space: nowrap; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: #6b7280; background: #fafafa; }
+tr:last-child td { border-bottom: none; }
+.badge { padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+.badge.active { background: #dcfce7; color: #166534; }
+.badge.on_leave { background: #fef3c7; color: #92400e; }
+.badge.terminated { background: #f3f4f6; color: #4b5563; }
