@@ -120,3 +120,14 @@ describe("delete forever", () => {
     assert.ok((await a.directory()).some((e) => e.email === "omar.haddad@example.com"));
   });
 });
+
+describe("non-numeric ids", () => {
+  const ctx = startTestServer();
+  after(() => ctx.close());
+
+  it("return 404 from remove, restore and delete forever", async () => {
+    for (const [method, path] of [["DELETE", "/api/employees/abc"], ["POST", "/api/employees/abc/restore"], ["DELETE", "/api/trash/abc"]]) {
+      assert.equal((await fetch(ctx.baseUrl + path, { method })).status, 404, `${method} ${path}`);
+    }
+  });
+});

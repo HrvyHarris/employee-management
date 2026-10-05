@@ -19,7 +19,7 @@ export function employeesRouter(db: Db) {
     res.json(rows);
   });
 
-  // One employee, used to fill the edit form. The profile page ticket can extend this response.
+  // One employee, used to fill the edit form.
   router.get("/:id", (req, res) => {
     const row = db
       .prepare(
@@ -36,6 +36,13 @@ export function employeesRouter(db: Db) {
     res.json(row);
   });
 
+  // A link to a manager who was trashed later is kept on edit. Only new assignments must be live employees.
+  function keepsManager(id: number | undefined, managerId: number) {
+    if (id === undefined) return false;
+    const current = db.prepare("SELECT manager_id FROM employees WHERE id = ?").get(id) as { manager_id: number | null };
+    return current.manager_id === managerId;
+  }
+
   // Validates a submitted form for a new employee, or for employee `id` when editing.
   // Sends the 400 or 409 response and returns null when the form is rejected.
   function accept(body: Record<string, unknown>, res: Response, id?: number): EmployeeInput | null {
@@ -43,8 +50,13 @@ export function employeesRouter(db: Db) {
     if (id !== undefined && values.manager_id === id) {
       errors.manager_id = "An employee cannot be their own manager";
     } else if (values.manager_id !== null) {
-      const manager = db.prepare("SELECT id FROM employees WHERE id = ?").get(values.manager_id);
+      const manager = db.prepare("SELECT deleted_at FROM employees WHERE id = ?").get(values.manager_id) as
+        | { deleted_at: string | null }
+        | undefined;
       if (!manager) errors.manager_id = "Manager does not exist";
+      else if (manager.deleted_at && !keepsManager(id, values.manager_id)) {
+        errors.manager_id = "This manager is in the Trash. Choose someone else.";
+      }
     }
     if (Object.keys(errors).length) {
       res.status(400).json({ errors });
