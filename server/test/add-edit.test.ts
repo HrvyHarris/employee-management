@@ -90,6 +90,26 @@ describe("POST /api/employees", () => {
     assert.equal(added.status, "on_leave");
     assert.equal(added.termination_date, null);
   });
+
+  it("returns a field-level 400 for a hire date that is not a real YYYY-MM-DD date", async () => {
+    for (const hire_date of ["garbage", "2025-02-30", "03/01/2025"]) {
+      const res = await send("POST", "/api/employees", { ...valid, email: "bad.hire@example.com", hire_date });
+      assert.equal(res.status, 400, hire_date);
+      assert.deepEqual(await res.json(), { errors: { hire_date: "Enter a valid date (YYYY-MM-DD)" } }, hire_date);
+    }
+  });
+
+  it("returns a field-level 400 for a termination date that is not a real YYYY-MM-DD date", async () => {
+    const res = await send("POST", "/api/employees", { ...valid, email: "bad.end@example.com", status: "terminated", termination_date: "garbage" });
+    assert.equal(res.status, 400);
+    assert.deepEqual(await res.json(), { errors: { termination_date: "Enter a valid date (YYYY-MM-DD)" } });
+  });
+
+  it("returns a field-level 400 when the termination date is before the hire date", async () => {
+    const res = await send("POST", "/api/employees", { ...valid, email: "early.end@example.com", status: "terminated", hire_date: "2025-03-01", termination_date: "2025-02-28" });
+    assert.equal(res.status, 400);
+    assert.deepEqual(await res.json(), { errors: { termination_date: "Termination date cannot be before the hire date" } });
+  });
 });
 
 describe("PUT /api/employees/:id", () => {
@@ -132,6 +152,33 @@ describe("PUT /api/employees/:id", () => {
     const res = await send("PUT", `/api/employees/${lena.id}`, { ...lena, job_title: "Staff Engineer" });
     assert.equal(res.status, 200);
   });
+
+  it("clears the termination date when a terminated employee is edited back to active", async () => {
+    await send("POST", "/api/employees", { ...valid, email: "back.again@example.com", status: "terminated", termination_date: "2026-01-15" });
+    const left = await byEmail("back.again@example.com");
+    assert.equal(left.termination_date, "2026-01-15");
+    const res = await send("PUT", `/api/employees/${left.id}`, { ...left, status: "active" });
+    assert.equal(res.status, 200);
+    const back = await byEmail("back.again@example.com");
+    assert.equal(back.status, "active");
+    assert.equal(back.termination_date, null);
+  });
+
+  it("returns a 409 when the edited email belongs to another live employee", async () => {
+    const lena = await byEmail("lena.fischer@example.com");
+    const res = await send("PUT", `/api/employees/${lena.id}`, { ...lena, email: "tomas.novak@example.com" });
+    assert.equal(res.status, 409);
+    assert.deepEqual(await res.json(), { errors: { email: "This email already belongs to Tomas Novak" } });
+  });
+
+  it("returns a different 409 when the edited email belongs to someone in the Trash", async () => {
+    const lena = await byEmail("lena.fischer@example.com");
+    const res = await send("PUT", `/api/employees/${lena.id}`, { ...lena, email: "patrick.hale@example.com" });
+    assert.equal(res.status, 409);
+    assert.deepEqual(await res.json(), {
+      errors: { email: "This email belongs to Patrick Hale, who is in the Trash. Restore them instead." },
+    });
+  });
 });
 
 describe("GET /api/employees/:id", () => {
@@ -151,5 +198,42 @@ describe("GET /api/employees/:id", () => {
     const trashedId = Array.from({ length: maxId }, (_, i) => i + 1).find((id) => !all.some((e) => e.id === id))!;
     const res = await fetch(`${ctx.baseUrl}/api/employees/${trashedId}`);
     assert.equal(res.status, 404);
+  });
+});
+
+describe("manager must be a live employee", () => {
+  const own = startTestServer();
+  after(() => own.close());
+  const put = (id: number, body: unknown) =>
+    fetch(`${own.baseUrl}/api/employees/${id}`, { method: "PUT", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  const people = async () => (await (await fetch(`${own.baseUrl}/api/employees`)).json()) as Employee[];
+  const trashedId = async (email: string) =>
+    ((await (await fetch(`${own.baseUrl}/api/trash`)).json()) as Employee[]).find((e) => e.email === email)!.id;
+
+  it("rejects adding an employee whose manager is in the Trash", async () => {
+    const patrick = await trashedId("patrick.hale@example.com");
+    const res = await fetch(`${own.baseUrl}/api/employees`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ ...valid, email: "reports.to.trash@example.com", manager_id: patrick }),
+    });
+    assert.equal(res.status, 400);
+    assert.deepEqual(await res.json(), { errors: { manager_id: "This manager is in the Trash. Choose someone else." } });
+  });
+
+  it("still saves an employee whose existing manager was moved to the Trash later", async () => {
+    const sofia = (await people()).find((e) => e.email === "sofia.marchetti@example.com")!;
+    assert.equal((await fetch(`${own.baseUrl}/api/employees/${sofia.id}`, { method: "DELETE" })).status, 204);
+    const lena = (await people()).find((e) => e.email === "lena.fischer@example.com")!;
+    assert.equal(lena.manager_id, sofia.id);
+    const res = await put(lena.id, { ...lena, job_title: "Principal Engineer" });
+    assert.equal(res.status, 200);
+  });
+
+  it("rejects changing an employee's manager to someone in the Trash", async () => {
+    const omar = (await people()).find((e) => e.email === "omar.haddad@example.com")!;
+    const res = await put(omar.id, { ...omar, manager_id: await trashedId("isabel.moreau@example.com") });
+    assert.equal(res.status, 400);
+    assert.deepEqual(await res.json(), { errors: { manager_id: "This manager is in the Trash. Choose someone else." } });
   });
 });
