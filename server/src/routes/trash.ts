@@ -8,14 +8,14 @@ export function trashRouter(db: Db) {
   router.delete("/employees/:id", (req, res) => {
     const result = db
       .prepare("UPDATE employees SET deleted_at = datetime('now') WHERE id = ? AND deleted_at IS NULL")
-      .run(req.params.id);
+      .run(Number(req.params.id));
     res.status(result.changes ? 204 : 404).end();
   });
 
   router.post("/employees/:id/restore", (req, res) => {
     const result = db
       .prepare("UPDATE employees SET deleted_at = NULL WHERE id = ? AND deleted_at IS NOT NULL")
-      .run(req.params.id);
+      .run(Number(req.params.id));
     if (!result.changes) {
       res.status(404).json({ error: "Not in the Trash" });
       return;
@@ -38,7 +38,7 @@ export function trashRouter(db: Db) {
 
   // Reports' manager_id is cleared by ON DELETE SET NULL. Time off goes with the row via ON DELETE CASCADE.
   router.delete("/trash/:id", (req, res) => {
-    const result = db.prepare("DELETE FROM employees WHERE id = ? AND deleted_at IS NOT NULL").run(req.params.id);
+    const result = db.prepare("DELETE FROM employees WHERE id = ? AND deleted_at IS NOT NULL").run(Number(req.params.id));
     res.status(result.changes ? 204 : 404).end();
   });
 
